@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+
+  docker-mysql:
+    container_name: docker-mysql
+    image: mysql:latest
+    environment:
+      MYSQL_DATABASE: bank
+      MYSQL_ROOT_PASSWORD: abc123
+    expose:
+      - 3306
+    ports:
+      - 3307:3306
+    networks:
+      - bank-network
+    restart: always
+
+  bankaccount-api:
+    restart: on-failure
+    container_name: bankaccount-api
+    build:
+      context: .
+      dockerfile: bankaccount-api.dockerfile
+    image: bankaccount-api:latest
+    expose:
+      - 8091
+    ports:
+      - 8091:8091
+    networks:
+      - bank-network
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/bank?allowPublicKeyRetrieval=true&autoReconnect=true&useSSL=false&useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+    depends_on:
+      - docker-mysql
+
+networks:
+  bank-network:
+    driver: bridge
