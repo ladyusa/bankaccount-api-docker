@@ -30,7 +30,7 @@ services:
     networks:
       - bank-network
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/bank?allowPublicKeyRetrieval=true
+      SPRING_DATASOURCE_URL: jdbc:mysql://docker-mysql:3306/bank
     depends_on:
       - docker-mysql
 
